@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)file:///F:/anyy/web/verify.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANYY CUTIE VERIFICATION</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&amp;display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async="" defer=""></script>
+
+    <meta http-equiv="Content-Security-Policy" content="script-src &#39;self&#39; &#39;unsafe-inline&#39; https://challenges.cloudflare.com https://telegram.org https://fonts.googleapis.com; style-src &#39;self&#39; &#39;unsafe-inline&#39; https://fonts.googleapis.com; font-src &#39;self&#39; https://fonts.gstatic.com; frame-src https://challenges.cloudflare.com; connect-src &#39;self&#39; https://challenges.cloudflare.com;">
+
+    <style>
+        :root {
+            --pastel-pink: #ffdde1;
+            --deep-pink: #ee9ca7;
+            --cream: #fffaf0;
+            --text-pink: #d63384;
+            --soft-rose: #ff8da1;
+            --warm-gold: #ffd76a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden auto;
+            background:
+                radial-gradient(circle at 14% 18%, rgba(255, 248, 219, 0.9) 0 8%, transparent 9%),
+                linear-gradient(135deg, var(--pastel-pink) 0%, var(--deep-pink) 100%);
+        }
+
+        .anime-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .sakura {
+            position: absolute;
+            background-color: #ffb7c5;
+            border-radius: 100% 0 100% 0;
+            opacity: 0.8;
+            filter: blur(1px);
+            animation: fall linear infinite;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 100px;
+            opacity: 0.65;
+            filter: blur(18px);
+            animation: drift linear infinite;
+        }
+
+        .river {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15vh;
+            background: linear-gradient(to bottom, rgba(173, 216, 230, 0.5), rgba(255, 182, 193, 0.5));
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            height: 2px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.34);
+            animation: flow linear infinite;
+        }
+
+        .container {
+            width: min(450px, 100%);
+            margin: auto;
+            perspective: 1000px;
+        }
+
+        .card {
+            position: relative;
+            overflow: hidden;
+            padding: 32px 20px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow:
+                0 20px 50px rgba(238, 156, 167, 0.32),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.72), transparent 22%),
+                radial-gradient(circle at 86% 13%, rgba(255, 215, 106, 0.26), transparent 20%);
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            display: inline-block;
+            margin-bottom: 18px;
+            font-size: 60px;
+            filter: drop-shadow(0 5px 10px rgba(214, 51, 132, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: var(--text-pink);
+            font-size: clamp(23px, 6vw, 28px);
+            font-weight: 900;
+            letter-spacing: 0;
+            line-height: 1.12;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0 white;
+        }
+
+        .subtitle {
+            max-width: 310px;
+            margin: 0 auto 22px;
+            color: #885a5f;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .captcha-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 96px;
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 14px;
+            overflow: hidden;
+            border: 2px solid var(--pastel-pink);
+            border-radius: 20px;
+            background: rgba(255, 250, 240, 0.82);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .status {
+            display: none;
+            margin: 18px 0 0;
+            padding: 14px 16px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.35;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .status.success {
+            display: block;
+            position: relative;
+            color: var(--text-pink);
+            border: 2px solid #ffc1cc;
+            background: #fff0f5;
+        }
+
+        .status.success::after {
+            content: "💖";
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            animation: sparkle 1s infinite alternate;
+        }
+
+        .status.error {
+            display: block;
+            color: #d32f2f;
+            border: 2px solid #ffcdd2;
+            background: #fff5f5;
+        }
+
+        .status.loading {
+            display: block;
+            color: #9a6b00;
+            border: 2px solid #ffeaa7;
+            background: #fffef0;
+        }
+
+        .footer {
+            margin-top: 24px;
+            color: #a8888a;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); }
+            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); }
+        }
+
+        @keyframes drift {
+            from { left: -220px; }
+            to { left: 110vw; }
+        }
+
+        @keyframes flow {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(200%); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes sparkle {
+            from { transform: translateY(-50%) scale(1); opacity: 1; }
+            to { transform: translateY(-50%) scale(1.3); opacity: 0.72; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 1ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px;
+            }
+
+            .card {
+                padding: 28px 16px 24px;
+                border-radius: 34px;
+            }
+
+            .logo {
+                font-size: 54px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="anime-bg" aria-hidden="true">
+        <div id="clouds-container"><div class="cloud" style="width: 177.35px; height: 85.5614px; top: 2.31205vh; animation-duration: 25.2609s; animation-delay: 3.39314s;"></div><div class="cloud" style="width: 158.224px; height: 42.6611px; top: 19.7402vh; animation-duration: 35.7016s; animation-delay: 4.866s;"></div><div class="cloud" style="width: 225.721px; height: 75.3439px; top: 5.02289vh; animation-duration: 24.1621s; animation-delay: 0.770669s;"></div><div class="cloud" style="width: 140.848px; height: 43.3837px; top: 1.30278vh; animation-duration: 23.0612s; animation-delay: 3.62883s;"></div><div class="cloud" style="width: 126.406px; height: 62.5296px; top: 0.372842vh; animation-duration: 39.6253s; animation-delay: 12.1688s;"></div></div>
+        <div id="sakura-container"><div class="sakura" style="width: 7.25555px; height: 7.25555px; left: 50.9224vw; animation-duration: 9.11746s; animation-delay: 0.562402s; opacity: 0.686874;"></div><div class="sakura" style="width: 13.1203px; height: 13.1203px; left: 96.6267vw; animation-duration: 9.74052s; animation-delay: 3.16458s; opacity: 0.51071;"></div><div class="sakura" style="width: 13.6836px; height: 13.6836px; left: 57.7749vw; animation-duration: 8.33418s; animation-delay: 3.11262s; opacity: 0.651319;"></div><div class="sakura" style="width: 11.0046px; height: 11.0046px; left: 40.3649vw; animation-duration: 7.33372s; animation-delay: 0.255919s; opacity: 0.498119;"></div><div class="sakura" style="width: 14.5292px; height: 14.5292px; left: 71.4196vw; animation-duration: 7.45578s; animation-delay: 1.3479s; opacity: 0.752796;"></div><div class="sakura" style="width: 5.6708px; height: 5.6708px; left: 24.2716vw; animation-duration: 7.31234s; animation-delay: 2.11977s; opacity: 0.320622;"></div><div class="sakura" style="width: 10.8783px; height: 10.8783px; left: 71.6903vw; animation-duration: 5.69603s; animation-delay: 1.49363s; opacity: 0.657538;"></div><div class="sakura" style="width: 10.7448px; height: 10.7448px; left: 56.2731vw; animation-duration: 7.83798s; animation-delay: 4.33789s; opacity: 0.528257;"></div><div class="sakura" style="width: 11.2546px; height: 11.2546px; left: 49.653vw; animation-duration: 9.81236s; animation-delay: 1.06908s; opacity: 0.568323;"></div><div class="sakura" style="width: 7.84275px; height: 7.84275px; left: 86.8274vw; animation-duration: 6.95909s; animation-delay: 0.777907s; opacity: 0.684231;"></div><div class="sakura" style="width: 7.0622px; height: 7.0622px; left: 47.5075vw; animation-duration: 5.78241s; animation-delay: 4.45669s; opacity: 0.399303;"></div><div class="sakura" style="width: 12.0756px; height: 12.0756px; left: 51.0846vw; animation-duration: 8.87912s; animation-delay: 4.30555s; opacity: 0.755257;"></div><div class="sakura" style="width: 7.46541px; height: 7.46541px; left: 8.84925vw; animation-duration: 9.0143s; animation-delay: 4.35231s; opacity: 0.415335;"></div><div class="sakura" style="width: 14.4866px; height: 14.4866px; left: 62.4034vw; animation-duration: 7.02611s; animation-delay: 0.859944s; opacity: 0.430041;"></div><div class="sakura" style="width: 13.8273px; height: 13.8273px; left: 66.5597vw; animation-duration: 7.00839s; animation-delay: 3.12036s; opacity: 0.751655;"></div><div class="sakura" style="width: 6.83229px; height: 6.83229px; left: 38.0197vw; animation-duration: 8.26244s; animation-delay: 3.25538s; opacity: 0.574988;"></div><div class="sakura" style="width: 8.39985px; height: 8.39985px; left: 10.6997vw; animation-duration: 9.63905s; animation-delay: 0.477961s; opacity: 0.707699;"></div><div class="sakura" style="width: 11.4441px; height: 11.4441px; left: 75.4202vw; animation-duration: 9.50999s; animation-delay: 0.829334s; opacity: 0.753918;"></div><div class="sakura" style="width: 10.2138px; height: 10.2138px; left: 89.6333vw; animation-duration: 7.35265s; animation-delay: 1.36233s; opacity: 0.432907;"></div><div class="sakura" style="width: 10.9526px; height: 10.9526px; left: 27.4571vw; animation-duration: 5.50092s; animation-delay: 4.98003s; opacity: 0.778144;"></div><div class="sakura" style="width: 11.9085px; height: 11.9085px; left: 53.3261vw; animation-duration: 6.26816s; animation-delay: 0.485811s; opacity: 0.543287;"></div><div class="sakura" style="width: 7.69872px; height: 7.69872px; left: 7.50901vw; animation-duration: 9.28113s; animation-delay: 3.8952s; opacity: 0.70108;"></div><div class="sakura" style="width: 11.4658px; height: 11.4658px; left: 90.3926vw; animation-duration: 7.83212s; animation-delay: 1.04942s; opacity: 0.611323;"></div><div class="sakura" style="width: 11.3306px; height: 11.3306px; left: 36.9854vw; animation-duration: 7.18231s; animation-delay: 2.9074s; opacity: 0.497471;"></div><div class="sakura" style="width: 12.7387px; height: 12.7387px; left: 99.5292vw; animation-duration: 5.33499s; animation-delay: 0.799082s; opacity: 0.675031;"></div><div class="sakura" style="width: 13.6353px; height: 13.6353px; left: 92.9616vw; animation-duration: 8.92758s; animation-delay: 4.55322s; opacity: 0.373566;"></div><div class="sakura" style="width: 9.70292px; height: 9.70292px; left: 30.564vw; animation-duration: 8.54798s; animation-delay: 1.0676s; opacity: 0.426618;"></div><div class="sakura" style="width: 12.5306px; height: 12.5306px; left: 21.7294vw; animation-duration: 9.18322s; animation-delay: 2.83072s; opacity: 0.389935;"></div><div class="sakura" style="width: 13.9867px; height: 13.9867px; left: 58.869vw; animation-duration: 9.22901s; animation-delay: 2.47397s; opacity: 0.548034;"></div><div class="sakura" style="width: 5.65598px; height: 5.65598px; left: 98.8707vw; animation-duration: 9.3845s; animation-delay: 0.786673s; opacity: 0.732455;"></div></div>
+        <div class="river" id="river"><div class="ripple" style="width: 127.144px; top: 43.9297%; left: 0px; animation-duration: 3.60852s; animation-delay: 2.31234s;"></div><div class="ripple" style="width: 101.315px; top: 49.6773%; left: 0px; animation-duration: 3.65615s; animation-delay: 2.19766s;"></div><div class="ripple" style="width: 116.448px; top: 79.0317%; left: 0px; animation-duration: 2.96115s; animation-delay: 2.06531s;"></div><div class="ripple" style="width: 128.757px; top: 87.3933%; left: 0px; animation-duration: 4.81856s; animation-delay: 1.96505s;"></div><div class="ripple" style="width: 85.0406px; top: 96.8115%; left: 0px; animation-duration: 4.05065s; animation-delay: 0.683663s;"></div><div class="ripple" style="width: 134.376px; top: 89.5152%; left: 0px; animation-duration: 3.63773s; animation-delay: 1.65166s;"></div><div class="ripple" style="width: 98.2712px; top: 9.26053%; left: 0px; animation-duration: 2.2104s; animation-delay: 0.573457s;"></div><div class="ripple" style="width: 56.5075px; top: 77.5717%; left: 0px; animation-duration: 3.62442s; animation-delay: 2.4637s;"></div><div class="ripple" style="width: 70.5497px; top: 32.4011%; left: 0px; animation-duration: 4.34975s; animation-delay: 0.109772s;"></div><div class="ripple" style="width: 131.019px; top: 95.3882%; left: 0px; animation-duration: 2.4969s; animation-delay: 1.72812s;"></div></div>
+    </div>
+
+    <main class="container">
+        <section class="card">
+            <div class="content">
+                <div class="logo">🌸</div>
+                <h1>ANYY CUTIE VERIFICATION</h1>
+                <p class="subtitle">Pass this tiny check, cutie.</p>
+
+                <div class="captcha-container">
+                    <div id="cf-turnstile"></div>
+                </div>
+
+                <div id="status" class="status error">Please open this check from Telegram.</div>
+
+                <div class="footer">✨</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const CONFIGURED_TURNSTILE_SITE_KEY = "0x4AAAAAADDxr03AHxX7zupM";
+        const URL_SITE_KEY = new URLSearchParams(window.location.search).get("site_key") || "";
+        const TURNSTILE_SITE_KEY = URL_SITE_KEY || (
+            CONFIGURED_TURNSTILE_SITE_KEY.startsWith("__") ? "" : CONFIGURED_TURNSTILE_SITE_KEY
+        );
+
+        let tg = null;
+        let turnstileWidgetId = null;
+        let isVerified = false;
+        let isSending = false;
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById("status");
+            statusEl.textContent = message;
+            statusEl.className = "status " + (type || "loading");
+        }
+
+        function setupTelegram() {
+            if (!window.Telegram || !window.Telegram.WebApp) {
+                showStatus("Please open this check from Telegram.", "error");
+                return false;
+            }
+
+            tg = window.Telegram.WebApp;
+            tg.ready();
+            tg.expand();
+            return true;
+        }
+
+        function initTurnstile() {
+            if (turnstileWidgetId !== null || typeof turnstile === "undefined") {
+                return;
+            }
+            if (!TURNSTILE_SITE_KEY) {
+                showStatus("Verification is not configured yet.", "error");
+                return;
+            }
+
+            try {
+                turnstileWidgetId = turnstile.render("#cf-turnstile", {
+                    sitekey: TURNSTILE_SITE_KEY,
+                    action: "anyy_web_verify",
+                    callback: onCaptchaSuccess,
+                    "expired-callback": function() {
+                        isVerified = false;
+                        showStatus("Oopsie! CAPTCHA expired. Try once more, cutie! 🌸", "error");
+                    },
+                    "error-callback": function() {
+                        showStatus("Oh no! CAPTCHA error. Please refresh the page! 🎀", "error");
+                    }
+                });
+            } catch (error) {
+                console.error("Turnstile render failed:", error);
+                showStatus("CAPTCHA failed to load. Please refresh the page, sweetie! 🍬", "error");
+            }
+        }
+
+        function waitForTurnstile() {
+            initTurnstile();
+            const interval = window.setInterval(function() {
+                initTurnstile();
+                if (turnstileWidgetId !== null) {
+                    window.clearInterval(interval);
+                }
+            }, 150);
+
+            window.setTimeout(function() {
+                window.clearInterval(interval);
+                if (turnstileWidgetId === null) {
+                    showStatus("CAPTCHA is taking too long to load. Please refresh.", "error");
+                }
+            }, 10000);
+        }
+
+        function initAnimeBG() {
+            const sakuraContainer = document.getElementById("sakura-container");
+            const cloudsContainer = document.getElementById("clouds-container");
+            const river = document.getElementById("river");
+
+            for (let i = 0; i < 30; i++) {
+                const petal = document.createElement("div");
+                const size = Math.random() * 10 + 5 + "px";
+                petal.className = "sakura";
+                petal.style.width = size;
+                petal.style.height = size;
+                petal.style.left = Math.random() * 100 + "vw";
+                petal.style.animationDuration = Math.random() * 5 + 5 + "s";
+                petal.style.animationDelay = Math.random() * 5 + "s";
+                petal.style.opacity = Math.random() * 0.5 + 0.3;
+                sakuraContainer.appendChild(petal);
+            }
+
+            for (let i = 0; i < 5; i++) {
+                const cloud = document.createElement("div");
+                cloud.className = "cloud";
+                cloud.style.width = Math.random() * 150 + 100 + "px";
+                cloud.style.height = Math.random() * 50 + 40 + "px";
+                cloud.style.top = Math.random() * 40 + "vh";
+                cloud.style.animationDuration = Math.random() * 20 + 20 + "s";
+                cloud.style.animationDelay = Math.random() * 20 + "s";
+                cloudsContainer.appendChild(cloud);
+            }
+
+            for (let i = 0; i < 10; i++) {
+                const ripple = document.createElement("div");
+                ripple.className = "ripple";
+                ripple.style.width = Math.random() * 100 + 50 + "px";
+                ripple.style.top = Math.random() * 100 + "%";
+                ripple.style.left = "0";
+                ripple.style.animationDuration = Math.random() * 3 + 2 + "s";
+                ripple.style.animationDelay = Math.random() * 3 + "s";
+                river.appendChild(ripple);
+            }
+        }
+
+        function onCaptchaSuccess(token) {
+            isVerified = true;
+            window.cfToken = token;
+            showStatus("Verified! You are a real cutie human ✨", "success");
+            window.setTimeout(sendVerification, 450);
+        }
+
+        function sendVerification() {
+            if (isSending) {
+                return;
+            }
+            if (!tg) {
+                showStatus("Telegram connection is missing. Please reopen from the bot.", "error");
+                return;
+            }
+            if (!isVerified || !window.cfToken) {
+                showStatus("Please complete the CAPTCHA first.", "error");
+                return;
+            }
+
+            isSending = true;
+            showStatus("Sending to bot... 🚀", "loading");
+
+            try {
+                tg.sendData(JSON.stringify({
+                    action: "verify",
+                    cf_token: window.cfToken,
+                    timestamp: Date.now()
+                }));
+                showStatus("✅ Web verification done! You can close this window.", "success");
+                window.setTimeout(function() {
+                    tg.close();
+                }, 1800);
+            } catch (error) {
+                console.error("Telegram sendData failed:", error);
+                isSending = false;
+                showStatus("Error sending verification. Please try again.", "error");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            initAnimeBG();
+            if (!setupTelegram()) {
+                return;
+            }
+            waitForTurnstile();
+        });
+
+        document.addEventListener("visibilitychange", function() {
+            if (!document.hidden) {
+                initTurnstile();
+            }
+        });
+    </script>
+
+
+</body></html>
