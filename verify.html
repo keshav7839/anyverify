@@ -305,7 +305,7 @@
                     <div id="cf-turnstile"></div>
                 </div>
 
-                <div id="status" class="status error">Please open this check from Telegram.</div>
+                <div id="status" class="status loading">Loading verification...</div>
 
                 <div class="footer">✨</div>
             </div>
@@ -331,14 +331,13 @@
         }
 
         function setupTelegram() {
-            if (!window.Telegram || !window.Telegram.WebApp) {
-                showStatus("Please open this check from Telegram.", "error");
-                return false;
+            if (window.Telegram && window.Telegram.WebApp) {
+                tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                return true;
             }
-
-            tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand();
+            tg = null;
             return true;
         }
 
@@ -440,7 +439,7 @@
                 return;
             }
             if (!tg) {
-                showStatus("Telegram connection is missing. Please reopen from the bot.", "error");
+                showStatus("✅ CAPTCHA passed! Open this page from Telegram bot to complete verification.", "success");
                 return;
             }
             if (!isVerified || !window.cfToken) {
