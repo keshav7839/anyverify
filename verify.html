@@ -440,42 +440,12 @@
         }
 
         function sendVerification() {
-            if (isSending) {
-                return;
-            }
             if (!isVerified || !window.cfToken) {
                 showStatus("Please complete the CAPTCHA first.", "error");
                 return;
             }
-
-            var userId = null;
-            try {
-                userId = tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id;
-            } catch (e) {}
-
-            if (userId) {
-                isSending = true;
-                showStatus("Verifying... 🚀", "loading");
-                fetch("/.netlify/functions/verify", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({cf_token: window.cfToken, user_id: userId})
-                }).then(function(r) { return r.json(); }).then(function(d) {
-                    if (d.ok) {
-                        showStatus("✅ Verification complete! You can close this window.", "success");
-                    } else {
-                        showManual();
-                        showStatus("Auto-send failed. Use the code below 👇", "error");
-                    }
-                }).catch(function() {
-                    showManual();
-                    showStatus("Network error. Use the code below 👇", "error");
-                });
-                return;
-            }
-
             showManual();
-            showStatus("Open this page from the Telegram bot to auto-verify, or copy the code below 👇", "success");
+            showStatus("CAPTCHA passed! Copy the code below and send it to the bot", "success");
         }
 
         function manualCode() {
